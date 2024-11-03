@@ -37,7 +37,7 @@ const carouselData = [
         caption: "All reports are curated to focus on local government areas",
       },
       {
-        image: images.beach01,
+        image: images.bush01,
         heading: "Now and Then",
         caption: "View the current state of the local tourism industry and measure ongoing trends",
       }

@@ -1,7 +1,11 @@
 import { Container, Navbar, Nav, Button, Form, NavItem } from "react-bootstrap";
 import { Link, useResolvedPath, useMatch } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
-export default function Header() {
+export default function Header({ handleLogout, handleLogin }) {
+    const { isLoggedIn} = useAuth();
+
+
     return (
         <Navbar bg="dark" data-bs-theme="dark" sticky="top">
             <Container>
@@ -16,7 +20,9 @@ export default function Header() {
                     <Nav.Item>
                         <Nav.Link as={Link} to="/Contact">Contact</Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    {!isLoggedIn ? (
+                        <>
+                        <Nav.Item>
                         <Button variant="secondary" as={Link} to="/Register" className="ms-2">
                             Register
                         </Button>
@@ -26,6 +32,15 @@ export default function Header() {
                             Sign In
                         </Button>
                     </Nav.Item>
+                    </>  
+                    ):(
+                        <Nav.Item>
+                        <Button variant="danger" onClick={handleLogout} className="ms-2">
+                            Logout
+                        </Button>
+                    </Nav.Item>  
+                    )}
+
                 </Nav>
 
             </Container>

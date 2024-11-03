@@ -4,8 +4,8 @@ const path =  require("path");
 
 // User data for authentication
 const users = [
-    { username: "admin", password: "admin" }, 
-    { username: "user1", password: "password1" }
+    { username: "admin", password: "admin", location: "Cairns" }, 
+    { username: "user1", password: "password1", location: "Noosa" }
 ];
 
 // CSV data path
@@ -61,7 +61,7 @@ function routing(req, res) {
                     if (user) {
                         console.log('User found:', user.username);
                         res.writeHead(200, { "Content-Type": "application/json" });
-                        res.end(JSON.stringify({ message: "Login successful!" }));
+                        res.end(JSON.stringify({ message: "Login successful!" ,username: user.username }));
                     } else {
                         console.log('Invalid credentials for username:', username);
                         res.writeHead(401, { "Content-Type": "application/json" });

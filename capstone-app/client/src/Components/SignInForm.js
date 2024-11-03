@@ -1,71 +1,18 @@
-import { Form, Button, Container } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
+import React from 'react';
+import { useSignIn } from './Hooks/useSignIn';
+import './SignInForm.styles.css'; 
 import images from '../Assets/images';
-import React, { useState } from 'react';
 
-export default function SignInForm () {
-        const formStyle = {
-            backgroundImage: `url(${images.bush01})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            height: '50vh', 
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center', 
-            position: 'relative',
-            color: 'white'
-        };
-    
-        const overlayStyle = {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-            padding: '20px',
-            borderRadius: '8px',
-            width: '100%',
-            maxWidth: '400px', 
-        };
-
-        const [username, setUsername] = useState('');
-        const [password, setPassword] = useState('');
-        const [error, setError] = useState('');
-
-        const handleSubmit = async (event) => {
-            event.preventDefault();
-            setError('');
-
-            console.log('Submitting login form:', { username, password });
-            // Prepare the request payload
-            const payload = { username, password };
-    
-            try {
-                console.log('Sending POST request to /login');
-
-                const response = await fetch('http://localhost:3000/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-                console.log('Response status:', response.status);
-    
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.log('Error response data:', errorData);
-                    throw new Error(errorData.message || 'Invalid credentials');
-                }
-    
-                const data = await response.json();
-                console.log('Login successful, server response:', data.message);
-
-            } catch (err) {
-                console.error('Error during login:', err);
-                setError(err.message);
-            }
-        };
+export default function SignInForm () { 
+        const { username, setUsername, password, setPassword, error, handleSubmit } = useSignIn(); //in Hooks folder
 
         return (
-            <div style={formStyle}>
-                <div style={overlayStyle}>
-                    <h2 style={{ color: 'white', textAlign: 'center' }}>Sign In</h2>
+            <div className="form-container"
+            style={{ backgroundImage: `url(${images.bush01})` }} // set background image here cause css doesn't support imports
+            > 
+                <div className="overlay">
+                    <h2 className="form-header">Sign In</h2>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="formBasicUsername">
                                 <Form.Label>Username</Form.Label>

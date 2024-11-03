@@ -1,0 +1,17 @@
+.background {
+    background-size: cover;
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: white;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+}
