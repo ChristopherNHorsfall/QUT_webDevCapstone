@@ -56,12 +56,10 @@ export const AuthProvider = ({ children }) => {
     };   
     
     // Location change function
-    const handleLocationChange = (newLocation) => {
-        if (locations.includes(newLocation)) {
-            localStorage.setItem("userLocation", newLocation);
-            setUserLocation(newLocation);
-            console.log('Location updated to:', newLocation);
-        }
+    const handleLocationChange = (event) => {
+        const newLocation = event.target.value;
+        console.log('Selected location:', newLocation);
+        setUserLocation(newLocation);
     };
 
     return (

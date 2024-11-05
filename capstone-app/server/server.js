@@ -8,8 +8,20 @@ const users = [
     { username: "user1", password: "password1", location: "Noosa" }
 ];
 
-// CSV data path
-const dataPath = path.join(__dirname, 'data', 'OccupancyAndDailyRates.csv'); 
+// CSV data paths
+const dataPath1 = path.join(__dirname, 'data', 'OccupancyAndDailyRates.csv'); 
+const dataPath2 = path.join(__dirname, 'data', 'LengthOfStayAndReservationWindow.csv'); 
+
+// Function to serve a CSV file
+function serveCSVFile(filePath, res) {
+    fs.createReadStream(filePath)
+        .pipe(res)
+        .on('error', (err) => {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.write(JSON.stringify({ error: err.message }));
+            res.end();
+        });
+}
 
 //routing function
 function routing(req, res) {
@@ -29,17 +41,22 @@ function routing(req, res) {
     const url = req.url;
     const method = req.method;
 
-    if (url.startsWith("/data")) {
-        if (method === "GET") {
-            // Read the CSV file and send its contents
-            fs.createReadStream(dataPath)
-                .pipe(res) // Pipe the read stream directly to the response
-                .on('error', (err) => {
-                    res.writeHead(500, { "Content-Type": "application/json" });
-                    res.write(JSON.stringify({ error: err.message }));
-                    res.end();
-                });
+    if (method === "GET") {
+        console.log('GET request made...')
+        // Check the requested URL and serve the appropriate file
+        if (url === "/data/occupancy") {
+            console.log('occupancy data requested')
+            serveCSVFile(dataPath1, res);
+        } else if (url === "/data/lengthofstay") {
+            console.log('lengthofstay data requested')
+            serveCSVFile(dataPath2, res);
+        } else {
+            console.log('GET request error!')
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.write(JSON.stringify({ error: "Endpoint not found" }));
+            res.end();
         }
+
     } else if (url.startsWith("/login")) {
         if (method === "POST") {
             let body = '';
