@@ -1,11 +1,16 @@
 export const sanitizeData = (data) => {
-    return data.map(row => {
+    console.log("sanitizeData function called...")
+
+    const sanitizedData = data.map(row => {
         const sanitizedRow = {};
         for (const key in row) {
             sanitizedRow[key.trim()] = row[key]; // Trim each key
         }
         return sanitizedRow;
     });
+
+    console.log("Sanitized data:", sanitizedData); 
+    return sanitizedData;
 };
 
 

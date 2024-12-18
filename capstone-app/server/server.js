@@ -2,12 +2,14 @@ const http = require("http");
 const fs = require("fs");
 const path =  require("path");
 
+const knex = require('knex')(require('./knexfile.js'));
+
 // User data for authentication
 const users = [
     { username: "admin", password: "admin", location: "Cairns" }, 
     { username: "user1", password: "password1", location: "Noosa" }
 ];
-
+/*
 // CSV data paths
 const dataPath1 = path.join(__dirname, 'data', 'OccupancyAndDailyRates.csv'); 
 const dataPath2 = path.join(__dirname, 'data', 'LengthOfStayAndReservationWindow.csv'); 
@@ -22,7 +24,7 @@ function serveCSVFile(filePath, res) {
             res.end();
         });
 }
-
+*/
 //routing function
 function routing(req, res) {
     //CORS headers
@@ -46,10 +48,35 @@ function routing(req, res) {
         // Check the requested URL and serve the appropriate file
         if (url === "/data/occupancy") {
             console.log('occupancy data requested')
-            serveCSVFile(dataPath1, res);
+                knex('occupancy_data')
+                .select('*') // Select all columns
+                .then(results => {
+                    console.log("Query successful, sending data...")
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.write(JSON.stringify(results));
+                    res.end();
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.writeHead(500, { "Content-Type": "application/json" });
+                    res.write(JSON.stringify({ error: "Database error" }));
+                    res.end();
+                });  
         } else if (url === "/data/lengthofstay") {
-            console.log('lengthofstay data requested')
-            serveCSVFile(dataPath2, res);
+            console.log('lengthofstay data requested');        
+            knex('stay_data')
+                .select('*')
+                .then(results => {
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.write(JSON.stringify(results));
+                    res.end();
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.writeHead(500, { "Content-Type": "application/json" });
+                    res.write(JSON.stringify({ error: "Database error" }));
+                    res.end();
+                });
         } else {
             console.log('GET request error!')
             res.writeHead(404, { "Content-Type": "application/json" });

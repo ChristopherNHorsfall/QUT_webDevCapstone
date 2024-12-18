@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { csv } from 'd3-fetch';
+
 
 export const useFetchOccupancyData = () => {
     const [data, setData] = useState([]);
@@ -8,9 +8,13 @@ export const useFetchOccupancyData = () => {
         const fetchData = async () => {
             console.log("Fetching occupancy data..."); 
             try {
-                const rawData = await csv('http://localhost:3000/data/occupancy');
-                console.log("Data fetched successfully:", rawData);
-                setData(rawData);
+                const response = await fetch('http://localhost:3000/data/occupancy');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const jsonData = await response.json();
+                console.log("Data fetched successfully:", jsonData);
+                setData(jsonData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
